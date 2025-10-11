@@ -12,11 +12,12 @@ class Router
         $controllerName = $parts[0] ?? 'Home';
         $controllerName = 'Projeto\\Mvc\\controllers\\'.ucfirst($controllerName).'Controller';
         $controllerMethod = $parts[1] ?? 'index';
-        $controller = new $controllerName;
 
-        if(!class_exists($controllerName) || !method_exists($controller, $controllerMethod)){
+        if(!class_exists($controllerName) || !method_exists($controllerName, $controllerMethod)){
             $controller = new ErrorController;
-            $controllerMethod = 'NotFound';
+            $controllerMethod = 'notFound';
+        } else{
+            $controller = new $controllerName;
         }
 
         $params = array_slice($parts, 2);

@@ -6,10 +6,10 @@ $dbConfig = [];
 
 if(ENVIRONMENT == 'development'){
     define('BASE_URL', 'http://localhost/mvc/');
-    $config['dbname'] = 'developmentDatabase';
-    $config['host'] = 'localhost';
-    $config['dbuser'] = 'developmentUser';
-    $config['dbpass'] = 'developmentPass';
+    $dbConfig['dbname'] = 'developmentDatabase';
+    $dbConfig['host'] = 'localhost';
+    $dbConfig['dbuser'] = 'developmentUser';
+    $dbConfig['dbpass'] = 'developmentPass';
 //informações caso ele esteja em uma hospedagem
 } elseif(ENVIRONMENT == 'production'){
     define('BASE_URL', 'http://www.meusite.com');
@@ -21,10 +21,10 @@ if(ENVIRONMENT == 'development'){
 
 global $db;
 
-try{
+/*try{
     $db = new PDO('mysql:dbname='.$dbConfig['dbname'].';host='.$dbConfig['host'], $dbConfig['dbuser'], $dbConfig['dbpass']);
 }catch(PDOException $e){
     echo "Erro! ".$e->getMessage();
     exit;
-}
+}*/
 
