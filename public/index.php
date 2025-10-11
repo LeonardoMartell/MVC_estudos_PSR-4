@@ -1,5 +1,5 @@
 <?php
-require '../config.php';
+require '../vendor/autoload.php';
 use Projeto\Mvc\core\Router;
 
 $url = $_GET['url'] ?? '';

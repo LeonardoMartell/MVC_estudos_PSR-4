@@ -3,7 +3,11 @@
     "autoload": {
         "psr-4": {
             "Projeto\\Mvc\\": "src/"
-        }
+        },
+        "files": [
+            "src/core/functions.php",
+            "config.php"
+        ]
     },
     "require": {}
 }
