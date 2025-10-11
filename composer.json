@@ -5,8 +5,7 @@
             "Projeto\\Mvc\\": "src/"
         },
         "files": [
-            "src/core/functions.php",
-            "config.php"
+            "src/core/functions.php"
         ]
     },
     "require": {}
