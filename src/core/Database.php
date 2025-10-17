@@ -1,7 +1,7 @@
 <?php
 //Classe reponsável por conectar e fazer a conexão e consultas ao o banco de dados
 
-namespace Projeto\Mvc\core;
+namespace App\core;
 
 class Database
 {

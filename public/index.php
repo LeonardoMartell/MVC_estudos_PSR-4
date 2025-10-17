@@ -4,7 +4,7 @@
 // e acionar o roteador que decidirá qual controller/método executar.
 
 require '../vendor/autoload.php';
-use Projeto\Mvc\core\Router;
+use App\core\Router;
 
 session_start();
 

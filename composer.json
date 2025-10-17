@@ -2,7 +2,7 @@
     "name": "sarah/mvc",
     "autoload": {
         "psr-4": {
-            "Projeto\\Mvc\\": "src/"
+            "App\\": "src/"
         },
         "files": [
             "src/core/functions.php"

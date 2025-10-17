@@ -1,9 +1,9 @@
 <?php
 //classe padrão demonstrativa
 
-namespace Projeto\Mvc\controllers;
-use Projeto\Mvc\core\Controller;
-use Projeto\Mvc\models\User;
+namespace App\controllers;
+use App\core\Controller;
+use App\models\User;
 
 class HomeController extends Controller
 {

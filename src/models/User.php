@@ -3,9 +3,9 @@
 //classe demonstrativa e só funciona se conectada a um banco de dados com uma tabela ja criada (No caso aqui é usuarios)
 //Como é apenas demonstrativa não tem nenhuma verificação
 
-namespace Projeto\Mvc\models;
+namespace App\models;
 
-use Projeto\Mvc\core\Model;
+use App\core\Model;
 
 class User extends Model
 {
