@@ -1,3 +1,6 @@
+# Ativa o módulo de reescrita de URL do Apache
+# Remove 'index.php' da URL e redireciona todas as requisições para o front controller
+# Exemplo: /home/index → /index.php?url=home/index
 RewriteEngine On
 RewriteCond %{REQUEST_URI} !^/public
 RewriteRule ^(.*)$ public/index.php?url=$1 [QSA,L]

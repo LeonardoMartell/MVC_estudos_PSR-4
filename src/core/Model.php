@@ -1,4 +1,6 @@
 <?php
+//Classe abstrada conecta o banco de dados aos demais models
+
 namespace Projeto\Mvc\core;
 use Projeto\Mvc\core\Database;
 

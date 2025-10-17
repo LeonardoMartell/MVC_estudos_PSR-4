@@ -1,158 +1,251 @@
-# Estrutura MVC em PHP
+# Estrutura MVC em PHP (Projeto atualizado)
 
-Este projeto é uma estrutura base em PHP seguindo o padrão **MVC (Model-View-Controller)**. Ele foi desenvolvido para fins de estudo e reutilização, servindo como ponto de partida para futuros projetos que precisem de uma arquitetura organizada e escalável.
+Este repositório contém uma estrutura base em **MVC (Model-View-Controller)** em PHP puro.  
+O projeto foi organizado para estudos e reutilização — com roteamento, controllers, views e suporte a autoload via Composer.
 
-## 🚀 Objetivo
+---
 
-Fornecer uma estrutura simples, clara e reutilizável para aplicações em PHP, com rotas dinâmicas e separação de responsabilidades entre Models, Views e Controllers.
+## Visão geral rápida
 
-## 🧩 Estrutura de Pastas
+- Ponto de entrada público: `public/index.php`  
+- Roteamento via `src/core/Router.php` (lê o parâmetro `url` e direciona para o controller/action correspondente)  
+- Controllers em `src/controllers/` (inclui `HomeController.php` e controller de erros)  
+- Views em `src/views/` (tem views para `home` e páginas de erro 404/500)  
+- Core da aplicação em `src/core/` (`Controller.php`, `Router.php`)
+- Dependências/autoload gerenciados por Composer (`composer.json`, `vendor/` presente)
 
-``` bash
-mvc/
-├── .gitignore
-├── .htaccess
-├── composer.json
-├── composer.lock
-├── config.php
-├── environment.php
-├── public/
-│   ├── index.php
-├── src/
-│   ├── controllers/
-│   │   ├── HomeController.php
-│   │   ├── errors/
-│   │   │   ├── ErrorController.php
-│   ├── core/
-│   │   ├── Controller.php
-│   │   ├── Router.php
-│   ├── models/
-│   ├── views/
-│   │   ├── error/
-│   │   │   ├── 404.php
-│   │   │   ├── 500.php
-│   │   ├── home/
-│   │   │   ├── index.php
-├── vendor/
-│   ├── autoload.php
-│   ├── composer/
-│   │   ├── autoload_classmap.php
-│   │   ├── autoload_psr4.php
-│   │   ├── autoload_real.php
-│   │   ├── InstalledVersions.php
-│   │   ├── installed.php
-│   │   ├── installed.json
-│   │   └── LICENSE
-```
+---
 
-## ⚙️ Como Funciona
-
-### 1. `public/index.php`
-
-É o ponto de entrada da aplicação. Todas as requisições passam por este arquivo, que chama o **Router** responsável por interpretar a URL e direcionar para o controller correto.
-
-### 2. `src/core/Router.php`
-
-Controla as rotas da aplicação. Ele lê o parâmetro `url` enviado via `.htaccess` e define qual Controller e qual método (Action) devem ser executados.  
-Exemplo: `/home/index` → Controller: `HomeController` → Método: `index`  
-Também suporta parâmetros adicionais: `/home/detalhes/5` → Chama o método `detalhes('5')` dentro do `HomeController`.
-
-### 3. `src/core/Controller.php`
-
-Classe base que pode ser herdada por todos os controllers. Pode conter métodos utilitários (como carregamento de views) e lógica comum entre controladores.
-
-### 4. `src/controllers/`
-
-Contém os **Controllers**, que são responsáveis por tratar as requisições e conectar os **Models** com as **Views**.  
-Exemplo: `HomeController.php` controla as páginas principais do sistema.  
-`errors/ErrorController.php` controla as páginas de erro (como 404 e 500).
-
-### 5. `src/models/`
-
-Local destinado às regras de negócio e acesso a dados (caso utilize banco de dados ou outro tipo de persistência).  
-Por enquanto está vazio, mas pode ser usado em versões futuras.
-
-### 6. `src/views/`
-
-Contém os arquivos de interface (HTML, PHP) exibidos ao usuário.  
-Cada controller tem sua própria pasta dentro de `views/`.  
-Exemplo:  
-
-- `views/home/index.php` → view da página inicial  
-
-- `views/error/404.php` → view para página não encontrada
-
-### 7. `.htaccess`
-
-Responsável por redirecionar todas as requisições para o `public/index.php`, permitindo **URLs amigáveis** sem necessidade de incluir `.php` nos links.  
-Conteúdo:
-RewriteEngine ON
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ /mvc/public/index.php?url=$1 [QSA,L]
-
-### 8. `config.php` e `environment.php`
-
-Arquivos de configuração geral do projeto.  
-Podem armazenar constantes, variáveis de ambiente, configurações de banco de dados ou parâmetros de inicialização.
-
-### 9. `composer.json`
-
-Utilizado pelo **Composer**, para fazer o download de **autoload** do projeto.  
-Certifique-se de rodar o comando abaixo ao clonar o projeto:
+## Estrutura de arquivos (resumida)
 
 ``` bash
-composer install
+mvc/  
+│   .gitignore
+│   .htaccess
+│   composer.json
+│   composer.lock
+│   README.md
+│
+├───public
+│       index.php
+│
+├───src
+│   ├───config
+│   │       config.php
+│   │       configModelo.php
+│   │
+│   ├───controllers
+│   │   │   HomeController.php
+│   │   │
+│   │   └───errors
+│   │           ErrorController.php
+│   │
+│   ├───core
+│   │       Controller.php
+│   │       Database.php
+│   │       functions.php
+│   │       Model.php
+│   │       Router.php
+│   │
+│   ├───models
+│   └───views
+│       ├───error
+│       │       404.php
+│       │       500.php
+│       │
+│       └───home
+│               index.php
+│
+└───vendor
 ```
 
-## 🖥️ Como Utilizar
+---
 
-1. Clone ou copie o projeto para o seu servidor local (ex: `C:\wamp\www\mvc` ou `htdocs/mvc`)  
+## Como o roteador funciona (conceito aplicado neste projeto)
 
-2. Certifique-se de ter o **Composer** instalado  
+1. O `.htaccess` (se habilitado no Apache) redireciona requisições para `public/index.php` preenchendo `?url=...`.  
+2. O `Router` (em `src/core/Router.php`) lê `$_GET['url']` (ou usa rota padrão `home/index`), explode por `/` e mapeia:  
+   - segmento 0 → controller (ex: `home` → `HomeController`)  
+   - segmento 1 → action/método (ex: `index`)  
+   - segmentos 2+ → parâmetros que são passados para o método via `call_user_func_array`.  
+3. O controller instanciado executa a lógica necessária e carrega a view correspondente (incluindo templates se aplicável).  
+4. Páginas de erro (404/500) são tratadas por `ErrorController` e exibidas em `src/views/error/`.
 
-3. Rode o comando: `composer install`
+---
 
-4. Inicie o servidor local (ex: **WAMP**, **XAMPP**, **Laragon**, etc.)  
+## Instruções de instalação e execução (local)
 
-5. Acesse no navegador:  
+1. Coloque o projeto na pasta do seu servidor local (ex.: `C:\wamp64\www\mvc` ou `htdocs/mvc`).  
+2. Certifique-se que o Apache tem `mod_rewrite` habilitado (se você usar `.htaccess`).  
+3. Composer:
+   - Se o `vendor/` não existir no seu clone local, rode:
 
-`http://localhost/mvc/`
+     ```bash
+     composer install
+     ```
 
-## 🧠 Exemplo de Uso
+   - Se o `composer.json` foi alterado ou apenas para garantir autoload:
 
-Acesse:
-`http://localhost/mvc/`  
-Isso carregará o controller `HomeController` e o método `index()` (controller e método padrões), renderizando a view `views/home/index.php`.
+     ```bash
+     composer dump-autoload
+     ```
 
-Para criar novas páginas:
+4. Configure o **document root** do servidor para apontar para a pasta `public/` (recomendado) ou use o servidor embutido do PHP para testes:
 
-1. Crie um novo controller dentro de `src/controllers/`  
-2. Crie um método público dentro dele (Lembrando que index é o método padrão que é chamado mesmo sem ser digitado na barra de endereço).  
-3. Crie a view correspondente dentro de `src/views/nomedocontroller/`
-4. Dentro da função chame `$this->view('pastadaview/nomedaview')`
-5. Em paginas que precisam que parâmetros sejam chamados pelo link (Ex: Agenda/contato/1) se usa array para que sejam mandados para a view.
+   ```bash
+   php -S localhost:8000 -t public
+   ```
 
-``` code
-Exemplo:
-Class Agenda
-{
-  //Mostra um contato individualmente pelo id
-  public function contato($id){
-    $data = ['id' => $id];
-    $this->view('agenda/contato', $data);
+5. Abra o navegador e acesse:
+
+   ``` URL
+   http://localhost/mvc/
+   ```
+
+   (ou `http://localhost:8000` se usar o servidor embutido apontando para `public`)
+
+---
+
+## Rotas de exemplo
+
+- `/home/index` → `HomeController::index()`  
+- `/home` → (por padrão) `HomeController::index()`  
+- `/home/contato/Leo/84999999` → `HomeController::contato('Leo', '84999999')` (exemplo de método com parâmetros)
+
+---
+
+## Arquivos de configuração
+
+- `src/config/config.php` contêm as variáveis necessárias para conexão ao banco de dados.
+  - Verifique e ajuste valores como `host`, `user` e `pass`
+  - O projeto virá com o arquivo `configModelo.php`. Que é apenas um modelo de como deve ser o arquivo `config.php` original.
+  - Crie um novo arquivo chamado `config.php` na mesma pasta usando o modelo como base, ou renomeie `configModelo.php` e apague o comentário no codigo para usar as variáveis de ambiente.
+
+---
+
+## Classe Database
+
+- A classe `Database` é a classe responsável por conectar e consultar o banco de dados.
+- O método `connect` é responsável pela conexão ao banco de dados.
+  - Altere os dados de conexão no arquivo `config.php` na pasta `src/config`.
+- Os models que fazem esta conexão ao banco de dados herdam a classe abstrata `Model` que fica em `src/core`.
+  - A classe abstrata `Model` faz a conexão automatica ao banco de dados através de `db`.
+  - Classe que herdará a classe abstrata `Model` faz essa conexão usando `$this->db`.
+  - Ex: `$this->db->query()` invoca o método query da classe `Database`.
+- O método `query()` é o método mais básico de consulta. Ele apenas invoca método `prepare` da biblioteca `PDO` do PHP.
+  - Os parâmetros são enviados diretamente em `execute()` que já é invocado no método.
+  - Ex: na classe `User` para criar um novo usuário pode-se usar o método `query()`, e o exemplo mostra como passar os parâmetros.
+
+    - ``` PHP
+      public function createUser($nome, $telefone){
+         //Os parâmetros da consulta devem ser enviados como um array como no exemplo abaixo
+         $params = [':nome' => $nome, ':telefone' => $telefone];
+
+         //O método terá como seu primeiro parâmetro a sua consulta
+         //O segundo parâmetro do método devem ser os parâmetros da consulta
+         $this->db->query('INSERT INTO usuarios (nome, telefone) VALUES (:nome, :telefone)', $params);
+      }
+      ```
+
+- O método `fetch()` faz a consulta e retorna o primeiro resultado desta mesma consulta.
+  - É recomendado utilizá-lo para retornar um valor em específico no banco de dados.
+  - Usa-se o método da mesma forma que no método `query()`.
+  - EX: `$resultado = $this->db->fetch($consulta, $parametros)`.
+
+- O método `fetchAll()` faz a consulta ao banco e retorna todos os valores encontrados na consulta.
+  - É recomendado utilizá-lo, por exemplo, para listar os itens consultados.
+  - Usa-se o método da mesma forma que no método `query()`.
+  - EX: `$resultado = $this->db->fetchAll($consulta, $parametros)`.
+
+- O método `execute()` faz a consulta ao banco de dados e retorna o numero de linhas afetadas.
+  - Recomenda-se utilizar para saber se alguma linha do banco de dados foi afetada para fazer a consulta.
+  - Usa-se o método da mesma forma que no método `query()`.
+  - EX: `$resultado = $this->db->execute($consulta, $parametros)`.
+
+---
+
+## Adicionando um novo controller
+
+1. Na pasta `src/controllers/` crie um novo arquivo em que o nome do arquivo seja o nome da classe seguido de controller em pascalcase com a extensão .php ex: `ExemploController.php`
+
+2. O método padrão da classe deve ser `index()`. É o primeiro método chamado quando se acessa um determinado controller.
+   - Acessando a URL `/agenda/`, a classe chamada será `Agenda` e automaticamente o método chamado sera `index()`.
+   - Apenas se eu acessar `/agenda/contato/` é que o método `contato()`, se existir, será chamado.
+
+---
+
+## Trabalhando com métodos no controller
+
+- O método padrão chamado quando a classe é chamada é o `index()`. O método `index()` é chamado mesmo sem ser chamado no link.
+- O método `view(caminho-da-view, dados)` da superclasse `Controller` é quem carregará a view. Ex: `$this->view('agenda/contato')`.
+- O parametro dados do método view é opcional e é responsavel por carregar informações dinamicas para o view. Ele deve receber um array
+
+   ``` code
+   public function contato($nome){
+      $dados = ['nomeContato' => $nome];
+      $this->view('agenda/contato', $dados);
+   }
+   ```
+
+- Na view esses dados serão chamados pela chave do array passado no controller
+
+   ``` code
+      <h2>Olá, <?= $nome ?></h2>
+   ```
+
+---
+
+## Trabalhando com models
+
+- Na pasta `src/models` crie um novo arquivo com o mesmo nome da nova classe.
+- Essa classe deve herdar a classe `Model` que fica na pasta `Core`.
+- Herdando a classe `Model` use `$this->db` para fazer consultas ao banco de dados. A propria classe `Model` faz essa conexão automática.
+- Exemplo de uso:
+
+  ``` PHP
+  <?php
+  namespace App\models;
+  use App\core\Model;
+
+  class User extends Model
+  {
+    //Cria um noivo usuario no banco de dados
+    public function createUser($nome){
+      $params = [':nome' => $nome];
+      $this->db->query('INSERT INTO usuario (nome) VALUES (:nome)', $params);
+    }
   }
-}
-```
+  ```
 
-Dessa forma, na view você pode chamar diretamente pela chave do array `Id: <?= $id ?>`
+---
 
-## 📚 Objetivo do Projeto
+## Criando um novo view
 
-Essa estrutura foi criada com foco em **estudo**, **entendimento da arquitetura MVC** e **reutilização futura**.  
-Ela serve como base para desenvolver sistemas maiores e mais complexos, com organização e separação de responsabilidades desde o início.
+- As views devem ser criadas na pasta `src/views`.
+- De preferencia devem ser criadas pastas para cada controller diferente trabalhado.
+  - Ex: para `HomeController` existe o caminho `src/views/home`.
+- Os dados são passados para views em um array mas dentro da view se usa o nome da chave como variavel do dado.
+  - Ex: em `HomeController` os dados são passados como `$data = ['nome' => 'john']`
+  - Na view se usa `<?= $nome ?>` para retornar o valor da variavel
+- Caso esteja usando o método `fetchAll()` para retornar todos os dados de um banco de dados, use `$viewData` na view para receber estes dados.
 
-## 📄 Licença
+---
 
-Este projeto é de **uso livre** para fins de aprendizado, testes e extensão.  
+## Testes e verificação
+
+- Teste a rota base (`/home/index`) e uma rota com parâmetros.  
+- Force um 404 para confirmar `src/views/error/404.php`.  
+- Verifique o log do Apache / PHP-FPM caso algo não funcione (erros de classe não encontrada normalmente indicam problema de autoload ou path incorreto).
+
+---
+
+## Contato / Autor
+
+Meu email é (`leonardoalvesaraujo@hotmail.com`)
+
+---
+
+## Licença
+
+Este projeto é de uso livre para fins de aprendizado, testes e extensão.
 Você pode modificá-lo e utilizá-lo como base para outros projetos.

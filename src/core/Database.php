@@ -1,4 +1,6 @@
 <?php
+//Classe reponsável por conectar e fazer a conexão e consultas ao o banco de dados
+
 namespace Projeto\Mvc\core;
 
 class Database
@@ -8,10 +10,14 @@ class Database
 
     private static $instance = null;
 
+    //Conecta ao banco de dados automaticamente
     private function __construct(){
         $this->connect();
     }
 
+    //Verifica se o banco de dados ja foi instanciado
+    //Se não foi instanciado, cria uma nova instancia
+    //Caso já o tenha sido usa a primeira instancia, para não fazer várias conexões simultaneas
     public static function getInstance(){
         if(self::$instance === null){
             self::$instance = new Self();
@@ -19,7 +25,11 @@ class Database
         return self::$instance;
     }
 
+    //Conecta ao banco de dados
+    //Usa as varáveis de ambiente através do arquivo e da função config
+    //Retorna um erro se algumas das informações estiverem incorretas
     public function connect(){
+        //Extrai os dados de conexão  da funcção config, que é própria para isso
         $dbConfig = config('database');
 
         $dsn = "mysql:host=$dbConfig[host];dbname=$dbConfig[dbName];charset=$dbConfig[charset]";
@@ -36,34 +46,28 @@ class Database
         }
     }
 
+    //Retorna o primeiro resultado da consulta
     public function fetch($sql, $params =[]): array
     {
         $stmt = $this->query($sql, $params);
         return $stmt->fetch();
     }
 
+    //Retorna todos os resultados da consulta
     public function fetchAll($sql, $params =[]): array
     {
         $stmt = $this->query($sql, $params);
         return $stmt->fetchAll();
     }
 
+    //faz a consulta ao banco e retorna o numero de linhas afetadas
     public function execute($sql, $params =[]): int
     {
         $stmt = $this->query($sql, $params);
         return $stmt->rowCount();
     }
 
-    public function lastInsertId(): int
-    {
-        return $this->connection->lastInsertId();
-    }
-
-    public function rowCount(): int
-    {
-        return $this->connection->rowCOunt();
-    }
-
+    //Método responsavel pela consulta ao banco de dados
     public function query($sql, $params =[]){
         try{
             $stmt = $this->connection->prepare($sql);

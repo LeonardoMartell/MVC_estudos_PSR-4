@@ -1,4 +1,6 @@
 <?php
+//Classe responsavel por retornar uma view específica caso apresente algum erro seja de servidor ou pagina não encontrada
+
 namespace Projeto\Mvc\controllers\errors;
 use Projeto\Mvc\core\Controller;
 
