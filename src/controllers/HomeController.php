@@ -1,5 +1,5 @@
 <?php
-//classe padrão demonstrativa demonstrativa
+//classe padrão demonstrativa
 
 namespace Projeto\Mvc\controllers;
 use Projeto\Mvc\core\Controller;
