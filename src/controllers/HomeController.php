@@ -1,9 +1,9 @@
 <?php
 //classe padrão demonstrativa
 
-namespace App\controllers;
-use App\core\Controller;
-use App\models\User;
+namespace Src\controllers;
+use Src\core\Controller;
+use Src\models\User;
 
 class HomeController extends Controller
 {

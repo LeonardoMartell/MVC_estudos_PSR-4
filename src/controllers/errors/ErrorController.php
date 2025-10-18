@@ -1,8 +1,8 @@
 <?php
 //Classe responsavel por retornar uma view específica caso apresente algum erro seja de servidor ou pagina não encontrada
 
-namespace App\controllers\errors;
-use App\core\Controller;
+namespace Src\controllers\errors;
+use Src\core\Controller;
 
 class ErrorController extends Controller
 {

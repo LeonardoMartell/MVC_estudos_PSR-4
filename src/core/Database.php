@@ -1,7 +1,7 @@
 <?php
 //Classe reponsável por conectar e fazer a conexão e consultas ao o banco de dados
 
-namespace App\core;
+namespace Src\core;
 
 class Database
 {

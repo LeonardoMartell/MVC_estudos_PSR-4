@@ -1,8 +1,8 @@
 <?php
 //Classe abstrada conecta o banco de dados aos demais models
 
-namespace App\core;
-use App\core\Database;
+namespace Src\core;
+use Src\core\Database;
 
 abstract class Model
 {

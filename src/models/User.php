@@ -3,9 +3,9 @@
 //classe demonstrativa e só funciona se conectada a um banco de dados com uma tabela ja criada (No caso aqui é usuarios)
 //Como é apenas demonstrativa não tem nenhuma verificação
 
-namespace App\models;
+namespace Src\models;
 
-use App\core\Model;
+use Src\core\Model;
 
 class User extends Model
 {

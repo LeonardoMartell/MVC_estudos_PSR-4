@@ -4,8 +4,8 @@
 // e parâmetros a serem chamados e então executar a ação correspondente.
 
 
-namespace App\core;
-use App\controllers\errors\ErrorController;
+namespace Src\core;
+use Src\controllers\errors\ErrorController;
 
 class Router
 {
@@ -19,7 +19,7 @@ class Router
         $parts = $url ? explode('/', $url) : [];
 
         $controllerName = $parts[0] ?? 'Home';
-        $controllerName = 'App\\controllers\\'.ucfirst($controllerName).'Controller';
+        $controllerName = 'Src\\controllers\\'.ucfirst($controllerName).'Controller';
         $controllerMethod = $parts[1] ?? 'index';
 
         if(!class_exists($controllerName) || !method_exists($controllerName, $controllerMethod)){

@@ -3,7 +3,7 @@
 // Fornece métodos utilitários que podem ser usados por todos os controllers
 // (como renderização de views, redirecionamentos, etc.)
 
-namespace App\core;
+namespace Src\core;
 
 class Controller
 {
